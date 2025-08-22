@@ -16,7 +16,7 @@ router.post("/sign-up", async (req, res) => {
 		}
 
 		// Create a new user with hashed password
-		const user = await Bleepr.create({
+		const bleepr = await Bleepr.create({
 			username: req.body.username,
 			hashedPassword: bcrypt.hashSync(req.body.password, saltRounds),
 		});
