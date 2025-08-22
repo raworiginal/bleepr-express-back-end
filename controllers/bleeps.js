@@ -68,4 +68,22 @@ router.put("/:bleepId", verifyToken, async (req, res) => {
 
 // ========================== DELETE =========================== //
 
+//Delete /bleeps/:bleepId
+router.delete("/:bleepId", verifyToken, async (req, res) => {
+    try {
+        const bleep = await Bleep.findById(req.params.bleepId);
+
+        if (!bleep.author.equals(req.bleepr._id)) {
+            return res.status(403).send("You're not allowed to do that!")
+        }
+        const deletedBleep = await Bleep.findByIdAndDelete(req.params.bleepId)
+        res.status(200).json(deletedBleep)
+    } catch (error) {
+        res.status(500).json({error:error.message})
+    }
+})
+
+
+
+
 module.exports = router;
