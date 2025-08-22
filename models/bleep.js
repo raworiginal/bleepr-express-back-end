@@ -7,8 +7,8 @@ const commentSchema = mongoose.Schema({
 		maxLength: 128,
 	},
 	author: {
-		type: mongoose.Schema.Type.ObjectId,
-		ref: "User",
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Bleepr",
 	},
 });
 
@@ -19,13 +19,13 @@ const bleepSchema = mongoose.Schema({
 		maxLength: 128,
 	},
 	author: {
-		type: mongoose.Schema.Type.ObjectId,
-		ref: "User",
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Bleepr",
 	},
 	favoritedBy: [
 		{
-			type: mongoose.Schema.Type.ObjectId,
-			ref: "User",
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Bleepr",
 		},
 	],
 	comments: [commentSchema],
@@ -39,4 +39,4 @@ const bleepSchema = mongoose.Schema({
 
 const Bleep = mongoose.model("Bleep", bleepSchema);
 
-module.export = Bleep;
+module.exports = Bleep;
