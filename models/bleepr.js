@@ -10,6 +10,10 @@ const bleeprSchema = mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	email: {
+		type: String,
+		required: true,
+	},
 	friends: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
@@ -38,6 +42,7 @@ const bleeprSchema = mongoose.Schema({
 		type: aboutMeSchema,
 	},
 });
+
 userSchema.set("toJSON", {
 	transform: (document, returnedObject) => {
 		delete returnedObject.hashedPassword;
