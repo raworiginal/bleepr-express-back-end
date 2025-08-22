@@ -78,11 +78,11 @@ const bleeprSchema = mongoose.Schema({
 	},
 });
 
-userSchema.set("toJSON", {
+bleeprSchema.set("toJSON", {
 	transform: (document, returnedObject) => {
 		delete returnedObject.hashedPassword;
 	},
 });
-const Bleepr = mongoose.model("Bleepr", userSchema);
+const Bleepr = mongoose.model("Bleepr", bleeprSchema);
 
 module.exports = Bleepr;
