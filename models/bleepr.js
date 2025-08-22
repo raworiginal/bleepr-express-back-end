@@ -1,6 +1,36 @@
 const mongoose = require("mongoose");
 
 // a bleepr is a user
+ const aboutMeSchema = mongoose.Schema({
+	name: {
+		type: String
+	},
+	age: {
+		type: String
+	},
+	gender: {
+		type: String
+	},
+	location: {
+		type: String
+	},
+	bio: {
+		type: String
+	},
+	openTo: {
+		type: String,
+		Enum: ["networking", "dating", "making friends", "mentoring"]
+	},
+	notOpenTo: {
+		type: String,
+		Enum: ["networking", "dating", "making friends", "mentoring"]
+	},
+	relationshipStatus: {
+		type: String,
+		Enum: ["single", "in a relationahip", "married", "it's complicated", "open"]
+	}
+ })
+
 const bleeprSchema = mongoose.Schema({
 	username: {
 		type: String,
