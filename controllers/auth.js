@@ -2,24 +2,26 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const Bleepr = require("../models/bleepr");
 const saltRounds = 12;
 router.post("/sign-up", async (req, res) => {
 	try {
 		// Check if the username is already taken
-		const userInDatabase = await User.findOne({ username: req.body.username });
+		const bleeprInDatabase = await Bleepr.findOne({
+			username: req.body.username,
+		});
 
 		if (userInDatabase) {
-			return res.status(409).json({ err: "Username already taken." });
+			return res.status(409).json({ err: "username already taken." });
 		}
 
 		// Create a new user with hashed password
-		const user = await User.create({
+		const user = await Bleepr.create({
 			username: req.body.username,
 			hashedPassword: bcrypt.hashSync(req.body.password, saltRounds),
 		});
 
-		const payload = { username: user.username, _id: user._id };
+		const payload = { username: bleepr.username, _id: bleepr._id };
 
 		const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
@@ -31,8 +33,8 @@ router.post("/sign-up", async (req, res) => {
 
 router.post("/sign-in", async (req, res) => {
 	try {
-		const user = await User.findOne({ username: req.body.username });
-		if (!user) {
+		const bleepr = await Bleepr.findOne({ username: req.body.username });
+		if (!bleepr) {
 			return res.status(401).json({ err: "Invalid credentials." });
 		}
 
@@ -45,7 +47,7 @@ router.post("/sign-in", async (req, res) => {
 			return res.status(401).json({ err: "Invalid credentials." });
 		}
 
-		const payload = { username: user.username, _id: user._id };
+		const payload = { username: bleepr.username, _id: bleepr._id };
 		const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
 		res.status(200).json({ token });

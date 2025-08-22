@@ -1,33 +1,33 @@
-// controllers/users.js
+// controllers/bleeprs.js
 
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../middleware/verify-token");
-const User = require("../models/user");
+const Bleepr = require("../models/bleepr");
 
 router.get("/", verifyToken, async (req, res) => {
 	try {
-		// Get a list of all users, but only return their username and _id
-		const users = await User.find({}, "username");
+		// Get a list of all bleeprs, but only return their username and _id
+		const bleeprs = await Bleepr.find({}, "username");
 
-		res.json(users);
+		res.json(bleeprs);
 	} catch (err) {
 		res.status(500).json({ err: err.message });
 	}
 });
-router.get("/:userId", verifyToken, async (req, res) => {
+router.get("/:bleeprId", verifyToken, async (req, res) => {
 	try {
-		if (req.user._id !== req.params.userId) {
+		if (req.bleepr._id !== req.params.bleeprId) {
 			return res.status(403).json({ err: "Unauthorized" });
 		}
 
-		const user = await User.findById(req.params.userId);
+		const bleepr = await Bleepr.findById(req.params.bleeprId);
 
-		if (!user) {
-			return res.status(404).json({ err: "User not found." });
+		if (!bleepr) {
+			return res.status(404).json({ err: "Bleepr not found." });
 		}
 
-		res.json({ user });
+		res.json({ bleepr });
 	} catch (err) {
 		res.status(500).json({ err: err.message });
 	}
