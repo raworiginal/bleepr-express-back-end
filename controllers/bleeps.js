@@ -3,7 +3,7 @@ const verifyToken = require("../middleware/verify-token");
 const Bleep = require("../models/bleep.js");
 const router = express.Router();
 
-// CREATE
+// ========================= CREATE =========================== //
 
 // POST /bleeps
 router.post("/", verifyToken, async (req, res) => {
@@ -17,11 +17,23 @@ router.post("/", verifyToken, async (req, res) => {
     }
 })
 
-// READ
+// =========================== READ ============================ //
 
-// UPDATE
+//GET /bleeps
+router.get("/", verifyToken, async (req, res) => {
+    try {
+        const bleeps = await Bleep.find({})
+            .populate("author")
+            .sort({ createdAt: "desc" });
+        res.status(200).json(bleeps)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+});
 
-// DELETE
+//============================UPDATE =========================== //
+
+// ========================== DELETE =========================== //
 
 
 module.exports = router;
