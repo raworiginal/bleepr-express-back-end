@@ -11,7 +11,7 @@ router.post("/sign-up", async (req, res) => {
 			username: req.body.username,
 		});
 
-		if (userInDatabase) {
+		if (bleeprInDatabase) {
 			return res.status(409).json({ err: "username already taken." });
 		}
 
@@ -19,6 +19,7 @@ router.post("/sign-up", async (req, res) => {
 		const bleepr = await Bleepr.create({
 			username: req.body.username,
 			hashedPassword: bcrypt.hashSync(req.body.password, saltRounds),
+			email: req.body.email, 
 		});
 
 		const payload = { username: bleepr.username, _id: bleepr._id };
