@@ -6,7 +6,7 @@ const aboutMeSchema = mongoose.Schema({
 		type: String,
 	},
 	age: {
-		type: String,
+		type: Number,
 	},
 	gender: {
 		type: String,
@@ -18,11 +18,12 @@ const aboutMeSchema = mongoose.Schema({
 		type: String,
 	},
 	openTo: {
-		type: String,
+		type: [String],
 		Enum: ["networking", "dating", "making friends", "mentoring"],
 	},
+
 	notOpenTo: {
-		type: String,
+		type: [String],
 		Enum: ["networking", "dating", "making friends", "mentoring"],
 	},
 	relationshipStatus: {
