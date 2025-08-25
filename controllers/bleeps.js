@@ -116,4 +116,23 @@ router.delete("/:bleepId", verifyToken, async (req, res) => {
     }
 });
 
+// DELETE /bleeps/:bleepId/comments/:commentId
+router.delete("/:bleepId/comments/:commentId", verifyToken, async (req, res) => {
+    try {
+        const bleep = await Bleep.findById(req.params.bleepId);
+        const comment = bleep.comments.id(req.params.commentId);
+
+        if (comment.author.toString() !== req.bleepr._id) {
+            return res
+                .status(403)
+                .json({message: "You are not authorized to edit this comment"})
+        }
+
+        bleep.comments.remove({ _id: req.params.commentId });
+        await bleep.save();
+        res.status(200).json({message: "Comment deleted successfully"})
+    } catch (error) {
+        res.status(500).json({error:error.message})
+    }
+})
 module.exports = router;
