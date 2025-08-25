@@ -47,7 +47,6 @@ router.get("/:bleeprId", verifyToken, async (req, res) => {
 
 // update about me
 router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
-	// const bleepr = await Bleepr.findById(req.params.bleeprId);
 	try {
 		if (req.bleepr._id !== req.params.bleeprId) {
 			return res.status(403).json({ error: "Unauthorized" });
