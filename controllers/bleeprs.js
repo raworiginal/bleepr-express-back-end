@@ -43,6 +43,25 @@ router.get("/:bleeprId", verifyToken, async (req, res) => {
 //Add a Friend
 
 //Add to top8
+router.put("/:bleeprId/top8/:friendId/add", verifyToken, async (req, res) => {
+	try {
+		const currentBleepr = await Bleepr.findById(req.params.bleeprId);
+		if (req.bleepr._id !== req.params.bleeprId) {
+			return res.status(403).json({ error: "Unauthorized" });
+		}
+		if (currentBleepr.top8.includes(req.params.friendId)) {
+			return res.status(409).json("Already in Top 8");
+		}
+		if (currentBleepr.top8.length >= 8) {
+			return res.status(409).json("Top 8 is full.");
+		}
+		currentBleepr.top8.push(req.params.friendId);
+		await currentBleepr.save();
+		res.status(200).json(currentBleepr.top8);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+});
 // remove from top 8
 
 // update aboutMe
@@ -63,32 +82,32 @@ router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
 // Update addFriend
 router.put("/:bleeprId/addFriend", verifyToken, async (req, res) => {
 	try {
-		const currentBleepr = await Bleepr.findById(req.bleepr._id)
-		currentBleepr.friends.push(req.params.bleeprId)
+		const currentBleepr = await Bleepr.findById(req.bleepr._id);
+		if (currentBleepr.friends.includes(req.params.bleeprId)) {
+			return res.status(409).json("Already in friends list");
+		}
+		currentBleepr.friends.push(req.params.bleeprId);
 		await currentBleepr.save();
 
 		res.status(200).json(currentBleepr.friends);
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
-})
+});
 
 // Remove a Friend
 router.put("/:bleeprId/removeFriend", verifyToken, async (req, res) => {
 	try {
 		const currentBleepr = await Bleepr.findById(req.bleepr._id);
-		currentBleepr.friends.pull(req.params.bleeprId)
+		currentBleepr.friends.pull(req.params.bleeprId);
 		await currentBleepr.save();
 
-		res.status(200).json(currentBleepr.friends)
+		res.status(200).json(currentBleepr.friends);
 	} catch (error) {
-		res.status(500).json({error:error.message})
+		res.status(500).json({ error: error.message });
 	}
-})
+});
 
 /* ==================== DELETE ==================== */
-
-
-
 
 module.exports = router;
