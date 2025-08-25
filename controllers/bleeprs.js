@@ -13,7 +13,7 @@ const Bleepr = require("../models/bleepr");
 router.get("/", verifyToken, async (req, res) => {
 	try {
 		// Get a list of all bleeprs, but only return their username and _id
-		const bleeprs = await Bleepr.find({});
+		const bleeprs = await Bleepr.find({}).populate("friends");
 		res.json(bleeprs);
 	} catch (error) {
 		res.status(500).json({ error: error.message });
@@ -45,7 +45,7 @@ router.get("/:bleeprId", verifyToken, async (req, res) => {
 //Add to top8
 // remove from top 8
 
-// update about me
+// update aboutMe
 router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
 	try {
 		if (req.bleepr._id !== req.params.bleeprId) {
@@ -59,5 +59,19 @@ router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
 		res.status(500).json({ error: error.message });
 	}
 });
+
+// Update addFriend
+router.put("/:bleeprId/addFriend", verifyToken, async (req, res) => {
+	try {
+		const currentBleepr = await Bleepr.findById(req.bleepr._id)
+		currentBleepr.friends.push(req.params.bleeprId)
+		await currentBleepr.save();
+
+		res.status(200).json(currentBleepr.friends);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+})
+
 /* ==================== DELETE ==================== */
 module.exports = router;
