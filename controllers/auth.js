@@ -19,7 +19,7 @@ router.post("/sign-up", async (req, res) => {
 		const bleepr = await Bleepr.create({
 			username: req.body.username,
 			hashedPassword: bcrypt.hashSync(req.body.password, saltRounds),
-			email: req.body.email, 
+			email: req.body.email,
 		});
 
 		const payload = { username: bleepr.username, _id: bleepr._id };
