@@ -41,7 +41,7 @@ router.post("/sign-in", async (req, res) => {
 
 		const isPasswordCorrect = bcrypt.compareSync(
 			req.body.password,
-			user.hashedPassword
+			bleepr.hashedPassword
 		);
 
 		if (!isPasswordCorrect) {
