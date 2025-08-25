@@ -37,12 +37,9 @@ router.get("/:bleeprId", verifyToken, async (req, res) => {
 		res.status(500).json({ error: error.message });
 	}
 });
-// View all Friends
-// View Top 8
-/* ==================== UPDATE ==================== */
-//Add a Friend
 
-//Add to top8
+/* ==================== UPDATE ==================== */
+
 router.put("/:bleeprId/top8/:friendId/add", verifyToken, async (req, res) => {
 	try {
 		const currentBleepr = await Bleepr.findById(req.params.bleeprId);
@@ -63,21 +60,25 @@ router.put("/:bleeprId/top8/:friendId/add", verifyToken, async (req, res) => {
 	}
 });
 // remove from top 8
-router.put("/:bleeprId/top8/:friendId/remove", verifyToken, async (req, res) => {
-	try {
-		const currentBleepr = await Bleepr.findById(req.params.bleeprId);
+router.put(
+	"/:bleeprId/top8/:friendId/remove",
+	verifyToken,
+	async (req, res) => {
+		try {
+			const currentBleepr = await Bleepr.findById(req.params.bleeprId);
 
-		if (req.bleepr._id !== req.params.bleeprId) {
-			return res.status(403).json({ error: "Unauthorized" });
+			if (req.bleepr._id !== req.params.bleeprId) {
+				return res.status(403).json({ error: "Unauthorized" });
+			}
+
+			currentBleepr.top8.pull(req.params.friendId);
+			await currentBleepr.save();
+			res.status(200).json(currentBleepr.top8);
+		} catch (error) {
+			res.status(500).json({ error: error.message });
 		}
-		
-		currentBleepr.top8.pull(req.params.friendId);
-		await currentBleepr.save();
-		res.status(200).json(currentBleepr.top8);
-	} catch (error) {
-		res.status(500).json({ error: error.message });
 	}
-});
+);
 
 // update aboutMe
 router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
@@ -94,7 +95,7 @@ router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
 	}
 });
 
-// Update addFriend
+// Add a friend
 router.put("/:bleeprId/addFriend", verifyToken, async (req, res) => {
 	try {
 		const currentBleepr = await Bleepr.findById(req.bleepr._id);
