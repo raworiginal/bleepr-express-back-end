@@ -41,7 +41,7 @@ router.get("/:bleeprId", verifyToken, async (req, res) => {
 // View Top 8
 /* ==================== UPDATE ==================== */
 //Add a Friend
-// Remove a Friend
+
 //Add to top8
 // remove from top 8
 
@@ -73,5 +73,22 @@ router.put("/:bleeprId/addFriend", verifyToken, async (req, res) => {
 	}
 })
 
+// Remove a Friend
+router.put("/:bleeprId/removeFriend", verifyToken, async (req, res) => {
+	try {
+		const currentBleepr = await Bleepr.findById(req.bleepr._id);
+		currentBleepr.friends.pull(req.params.bleeprId)
+		await currentBleepr.save();
+
+		res.status(200).json(currentBleepr.friends)
+	} catch (error) {
+		res.status(500).json({error:error.message})
+	}
+})
+
 /* ==================== DELETE ==================== */
+
+
+
+
 module.exports = router;
