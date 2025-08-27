@@ -21,6 +21,13 @@ router.post("/sign-up", async (req, res) => {
 			hashedPassword: bcrypt.hashSync(req.body.password, saltRounds),
 			email: req.body.email,
 		});
+		try {
+			const bleeprAddImage = await Bleepr.findByIdAndUpdate(bleepr._id, {
+				profilePicture: `https://i.pravatar.cc/256?u=${bleepr._id}`,
+			});
+		} catch (error) {
+			console.log(error);
+		}
 
 		const payload = { username: bleepr.username, _id: bleepr._id };
 
