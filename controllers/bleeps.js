@@ -1,6 +1,7 @@
 const express = require("express");
 const verifyToken = require("../middleware/verify-token");
 const Bleep = require("../models/bleep.js");
+const Bleepr = require("../models/bleepr.js");
 const router = express.Router();
 
 // ========================= CREATE =========================== //
@@ -44,9 +45,15 @@ router.post("/:bleepId/favorite", verifyToken, async (req, res) => {
 		if (!bleep.favoritedBy.includes(req.bleepr._id)) {
 			bleep.favoritedBy.push(req.bleepr._id);
 			await bleep.save();
+			await Bleepr.findByIdAndUpdate(req.bleepr._id, {
+				$push: { favoritedBleeps: bleep._id },
+			});
 		} else {
 			bleep.favoritedBy.pull(req.bleepr._id);
 			await bleep.save();
+			await Bleepr.findByIdAndUpdate(req.bleepr._id, {
+				$pull: { favoritedBleeps: bleep._id },
+			});
 		}
 		res.status(200).json(bleep.favoritedBy);
 	} catch (error) {
