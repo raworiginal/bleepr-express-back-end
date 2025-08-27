@@ -31,6 +31,26 @@ router.post("/:bleepId/comments", verifyToken, async (req, res) => {
 		res.status(500).json({ error: error.message });
 	}
 });
+
+// POST /bleeps/:bleepId/liked-by
+router.post("/bleeps/:bleepId/liked-by/:bleeprId", verifyToken, async (req, res) => {
+	try {
+		const bleep = await Bleep.findById(req.params.bleepId)
+
+		if (!bleep) {
+			return res.status(404).send("bleep not found")
+		}
+
+		if (!bleep.favoritedBy.includes(req.params.bleeprId)) {
+			bleep.favoritedBy.push(bleeprId)
+			await bleep.save();
+		}
+		res.json({ success: true, count: bleep.favoritedBy.length })
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
+});
+
 // =========================== READ ============================ //
 
 //GET /bleeps
