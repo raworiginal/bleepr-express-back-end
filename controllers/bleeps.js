@@ -33,19 +33,22 @@ router.post("/:bleepId/comments", verifyToken, async (req, res) => {
 });
 
 // POST /bleeps/:bleepId/liked-by
-router.post("/bleeps/:bleepId/liked-by/:bleeprId", verifyToken, async (req, res) => {
+router.post("/:bleepId/favorite", verifyToken, async (req, res) => {
 	try {
-		const bleep = await Bleep.findById(req.params.bleepId)
+		const bleep = await Bleep.findById(req.params.bleepId);
 
 		if (!bleep) {
-			return res.status(404).send("bleep not found")
+			return res.status(404).send("bleep not found");
 		}
 
-		if (!bleep.favoritedBy.includes(req.params.bleeprId)) {
-			bleep.favoritedBy.push(bleeprId)
+		if (!bleep.favoritedBy.includes(req.bleepr._id)) {
+			bleep.favoritedBy.push(req.bleepr._id);
+			await bleep.save();
+		} else {
+			bleep.favoritedBy.pull(req.bleepr._id);
 			await bleep.save();
 		}
-		res.json({ success: true, count: bleep.favoritedBy.length })
+		res.status(200).json(bleep.favoritedBy);
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
