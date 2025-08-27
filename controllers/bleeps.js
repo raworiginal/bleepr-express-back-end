@@ -71,8 +71,7 @@ router.put("/:bleepId", verifyToken, async (req, res) => {
 			req.body,
 			{ new: true }
 		);
-
-		updatedBleep._doc.author = req.bleep;
+		updatedBleep._doc.author = req.bleepr;
 
 		res.status(200).json(updatedBleep);
 	} catch (error) {
