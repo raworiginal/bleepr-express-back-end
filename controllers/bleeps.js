@@ -61,6 +61,7 @@ router.get("/", verifyToken, async (req, res) => {
 	try {
 		const bleeps = await Bleep.find({})
 			.populate("author")
+			.populate("comments.author")
 			.sort({ createdAt: "desc" });
 		res.status(200).json(bleeps);
 	} catch (error) {
