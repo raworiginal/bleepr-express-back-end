@@ -50,6 +50,9 @@ const bleeprSchema = mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	profilePicture: {
+		type: String,
+	},
 	friends: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
