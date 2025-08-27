@@ -79,7 +79,9 @@ router.get("/", verifyToken, async (req, res) => {
 // GET /bleeps/:bleepId
 router.get("/:bleepId", verifyToken, async (req, res) => {
 	try {
-		const bleep = await Bleep.findById(req.params.bleepId).populate("author");
+		const bleep = await Bleep.findById(req.params.bleepId)
+			.populate("author")
+			.populate("comments.author");
 		res.status(200).json(bleep);
 	} catch (error) {
 		res.status(500).json({ error: error.message });
