@@ -95,30 +95,25 @@ router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
 	}
 });
 
-// Add a friend
-router.put("/:bleeprId/addFriend", verifyToken, async (req, res) => {
+// Add  or remove a friend
+router.put("/:bleeprId/friend", verifyToken, async (req, res) => {
 	try {
 		const currentBleepr = await Bleepr.findById(req.bleepr._id);
-		if (currentBleepr.friends.includes(req.params.bleeprId)) {
-			return res.status(409).json("Already in friends list");
+		if (!currentBleepr) return res.status(404).send("bleepr not found");
+		const friendedBleepr = await Bleepr.findById(req.params.bleeprId);
+		if (!friendedBleepr) return res.status(404).send("bleepr not found");
+		if (!currentBleepr.friends.includes(friendedBleepr._id)) {
+			currentBleepr.friends.push(friendedBleepr._id);
+			await currentBleepr.save();
+			friendedBleepr.friends.push(currentBleepr._id);
+			await friendedBleepr.save();
+		} else {
+			currentBleepr.friends.pull(friendedBleepr._id);
+			await currentBleepr.save();
+			friendedBleepr.friends.pull(currentBleepr._id);
+			await friendedBleepr.save();
 		}
-		currentBleepr.friends.push(req.params.bleeprId);
-		await currentBleepr.save();
-
-		res.status(200).json(currentBleepr.friends);
-	} catch (error) {
-		res.status(500).json({ error: error.message });
-	}
-});
-
-// Remove a Friend
-router.put("/:bleeprId/removeFriend", verifyToken, async (req, res) => {
-	try {
-		const currentBleepr = await Bleepr.findById(req.bleepr._id);
-		currentBleepr.friends.pull(req.params.bleeprId);
-		await currentBleepr.save();
-
-		res.status(200).json(currentBleepr.friends);
+		res.status(200).json({ currentBleepr, friendedBleepr });
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
