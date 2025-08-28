@@ -115,17 +115,18 @@ router.put("/:bleepId", verifyToken, async (req, res) => {
 // PUT /:bleepId/comments/:commentId
 router.put("/:bleepId/comments/:commentId", verifyToken, async (req, res) => {
 	try {
-		const bleep = await Bleep.findById(req.params.bleepId);
-		const comment = bleep.comments.id(req.params.commentId);
-
-		if (comment.author.toString() !== req.bleepr._id) {
+		const bleep = await Bleep.findById(req.params.bleepId).populate("comments.author");
+		const comment = bleep.comments.id(req.params.commentId)
+		;
+		console.log(comment.author._id, req.bleepr._id)
+		if (comment.author._id.toString() !== req.bleepr._id) {
 			return res
 				.status(403)
 				.json({ message: "You are not authorized to edit this comment" });
 		}
 		comment.text = req.body.text;
 		await bleep.save();
-		res.status(200).json({ message: "Comment updated successfully" });
+		res.status(200).json( comment );
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
