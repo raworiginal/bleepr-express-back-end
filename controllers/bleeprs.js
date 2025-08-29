@@ -12,7 +12,7 @@ const Bleepr = require("../models/bleepr");
 // index all users
 router.get("/", verifyToken, async (req, res) => {
 	try {
-		// Get a list of all bleeprs, but only return their username and _id
+		// Get a list of all bleeprs, but only return their username and _id remove populate
 		const bleeprs = await Bleepr.find({});
 		res.json(bleeprs);
 	} catch (error) {
