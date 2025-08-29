@@ -12,8 +12,8 @@ const Bleepr = require("../models/bleepr");
 // index all users
 router.get("/", verifyToken, async (req, res) => {
 	try {
-		// Get a list of all bleeprs, but only return their username and _id
-		const bleeprs = await Bleepr.find({}).populate("friends");
+		// Get a list of all bleeprs, but only return their username and _id remove populate
+		const bleeprs = await Bleepr.find({});
 		res.json(bleeprs);
 	} catch (error) {
 		res.status(500).json({ error: error.message });
@@ -123,7 +123,7 @@ router.put("/:bleeprId/friend", verifyToken, async (req, res) => {
 			currentBleepr.friends.push(friendedBleepr._id);
 			await currentBleepr.save();
 			friendedBleepr.friends.push(currentBleepr._id);
-			await friendedBleepr.save();
+			await friendedBleepr.save()
 		} else {
 			currentBleepr.friends.pull(friendedBleepr._id);
 			await currentBleepr.save();
