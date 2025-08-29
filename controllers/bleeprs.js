@@ -26,7 +26,7 @@ router.get("/:bleeprId", verifyToken, async (req, res) => {
 			return res.status(403).json({ error: "Unauthorized" });
 		}
 
-		const bleepr = await Bleepr.findById(req.params.bleeprId);
+		const bleepr = await Bleepr.findById(req.params.bleeprId).populate("friends");
 
 		if (!bleepr) {
 			return res.status(404).json({ error: "Bleepr not found." });
@@ -80,7 +80,7 @@ router.put(
 	}
 );
 
-// update aboutMe
+// see aboutMe ?
 router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
 	try {
 		if (req.bleepr._id !== req.params.bleeprId) {
@@ -93,6 +93,23 @@ router.put("/:bleeprId/aboutMe", verifyToken, async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: error.message });
 	}
+});
+
+// update profile
+router.put("/:bleeprId/edit", verifyToken, async (req, res) => {
+  try {
+    if (req.bleepr._id !== req.params.bleeprId) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+    const updatedBleepr = await Bleepr.findByIdAndUpdate(
+      req.params.bleeprId,
+      { $set: { aboutMe: req.body } },
+      { new: true } 
+    );
+    res.status(200).json(updatedBleepr);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Add  or remove a friend
